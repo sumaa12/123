@@ -1,0 +1,30 @@
+// Задаем размеры сетки
+var gridSizeX = 2; // Ширина сетки в градусах
+var gridSizeY = 2; // Высота сетки в градусах
+
+// Генерируем сетку квадратов для всей планеты
+var gridSquares = [];
+
+// Задаем минимальные и максимальные значения долготы и широты для всей планеты
+var lonMin = -180;
+var lonMax = 180;
+var latMin = -90;
+var latMax = 90;
+
+// Создаем сетку квадратов для всей планеты
+for (var lon = lonMin; lon < lonMax; lon += gridSizeX) {
+  for (var lat = latMin; lat < latMax; lat += gridSizeY) {
+    var minX = lon;
+    var minY = lat;
+    var maxX = lon + gridSizeX;
+    var maxY = lat + gridSizeY;
+    var gridSquare = ee.Geometry.Rectangle([minX, minY, maxX, maxY]);
+    gridSquares.push(ee.Feature(gridSquare));
+  }
+}
+
+// Преобразуем массив объектов в ee.FeatureCollection
+var grid = ee.FeatureCollection(gridSquares);
+
+// Выводим сетку на карту
+Map.addLayer(grid, {}, 'Grid');
